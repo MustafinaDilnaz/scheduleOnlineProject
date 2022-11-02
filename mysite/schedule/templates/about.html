@@ -1,10 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!--{% if user.is_authenticated %}-->
+<!--  Hi {{ user.username }}!-->
+
+<!--&lt;!&ndash;  <p><a href="{% url 'logout' %}">Log Out</a></p>&ndash;&gt;-->
+<!--&lt;!&ndash;  <p><a href="{% url 'password_reset' %}">Reset Password</a></p>&ndash;&gt;-->
+<!--&lt;!&ndash;  % else %//{}  &ndash;&gt;-->
+<!--&lt;!&ndash;  <p>You are not logged in</p>&ndash;&gt;-->
+<!--&lt;!&ndash;  <a href="{% url 'login' %}">Log In</a>&ndash;&gt;-->
+
+<!--{% endif %}-->
+<style>
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+
+.about-section {
+  padding: 100px;
+  text-align: center;
+  color: white;
+}
+
+.cover-container {
+  max-width: 42em;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+
+@media screen and (max-width: 650px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+</style>
+
+<div class="about-section bg-dark px-3">
+  <div class="cover-container ">
+    <h1>About Us Page</h1>
+    <p>Some text about who we are and what we do.Resize the browser window to see that this page is responsive by the way.</p>
+  </div>
+</div>
+
+{% endblock %}

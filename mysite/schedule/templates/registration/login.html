@@ -1,25 +1,80 @@
-{% extends "base.html" %}
-{% block title %}Create an Account{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
 
 {% block content %}
-<form>
-  <!-- Email input -->
-  <div class="form-outline mb-4">
-    <input type="email" id="form2Example1" class="form-control" />
-    <label class="form-label" for="form2Example1">Email address</label>
-  </div>
+<style>
 
-  <!-- Password input -->
-  <div class="form-outline mb-4">
-    <input type="password" id="form2Example2" class="form-control" />
-    <label class="form-label" for="form2Example2">Password</label>
-  </div>
+  html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  padding-bottom: 40px;
+  background-color: #f5f5f5;
+}
+
+.form-signin {
+  width: 100%;
+  padding: 15px;
+  max-width: 330px;
+  margin: auto;
+}
 
 
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
 
-  <!-- Submit button -->
-  <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>
+.linkk{
+  margin-top:10px;
+  color:black;
+}
 
-</form>
+.linkk:hover{
+  color:#6e6e6e;
+}
+
+</style>
+
+<html>
+  <body>
+    <main class="form-signin">
+      <h2 class="h2 mb-3 fw-normal">Log In</h2>
+      <form method="post" >
+        <div class="form-floating">
+          {% csrf_token %}
+          {{ form.as_p }}
+        </div>
+        <button class="w-10 btn btn-secondary" type="submit">Sign in</button>
+        <a class="d-flex linkk" href="{% url 'password_reset' %}"> ResetPassword</a>
+      </form>
+    </main>
+  </body>
+</html>
 
 {% endblock %}
+<!--<form>-->
+<!--  &lt;!&ndash; Email input &ndash;&gt;-->
+<!--  <div class="form-outline mb-4">-->
+<!--    <input type="email" id="form2Example1" class="form-control" />-->
+<!--    <label class="form-label" for="form2Example1">Email address</label>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Password input &ndash;&gt;-->
+<!--  <div class="form-outline mb-4">-->
+<!--    <input type="password" id="form2Example2" class="form-control" />-->
+<!--    <label class="form-label" for="form2Example2">Password</label>-->
+<!--  </div>-->
+
+
+
+<!--  &lt;!&ndash; Submit button &ndash;&gt;-->
+<!--  <button type="button" class="btn btn-primary btn-block mb-4">Sign in</button>-->
+
+<!--</form>-->
+

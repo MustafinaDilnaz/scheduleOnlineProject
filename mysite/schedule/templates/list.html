@@ -1,9 +1,25 @@
 {% extends 'base.html' %}
 
 {% load render_table from django_tables2 %}
-
-
 {% block content %}
-{% render_table object_list %}
+<style>
+    .container {
+  max-width: 1000px;
+  margin-top:30px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
 
+</style>
+<body>
+<div class="container">
+    <h2>List </h2>
+    <div class="table table-dark table-striped">
+        {% render_table object_list %}
+    </div>
+
+</div>
+</body>
 {% endblock %}
