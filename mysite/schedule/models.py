@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import Group
 from strategy_field.fields import StrategyField
 from strategy_field.registry import Registry
+
 
 # Create your models here.
 # create superuser
@@ -19,6 +19,7 @@ from strategy_field.registry import Registry
 class AbstractAddInfo(object):
     def __init__(self, context):
         self.context = context
+
     def addInfo(self):
         raise NotImplementedError
 
@@ -47,7 +48,6 @@ class Administrator(models.Model):
     email = models.CharField(max_length=50)
     password = models.CharField(max_length=30)
     information = StrategyField(registry=registry)
-
 
     def __str__(self):
         return f"Name: {self.name} {self.surname}"
@@ -86,7 +86,7 @@ class Client(models.Model):
 class Appointment(models.Model):
     user = models.ForeignKey(Employee, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    appointmentStartTime = models.TimeField()
-    appointmentEndTime = models.TimeField()
+    appointmentStartTime = models.DateTimeField()
+    appointmentEndTime = models.DateTimeField()
     price = models.FloatField()
-    isDoneStatus = models.BooleanField()
+    isDoneStatus = models.BooleanField(default=False)

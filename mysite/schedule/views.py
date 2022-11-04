@@ -1,12 +1,10 @@
-from django.http import HttpResponseRedirect
-from .forms import CreateEmployeeForm, RegisterForm, CreateClientForm
-from .models import Administrator, Employee, Client
-from django.contrib.auth import authenticate, login
+from .forms import CreateEmployeeForm, RegisterForm, CreateClientForm, CreateAppointmentForm
+from .models import Administrator, Employee, Client, Appointment
 from django.contrib import messages
 from .forms import UserRegistrationForm
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -14,18 +12,9 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from django.views.generic import ListView, DetailView
-from django.views import generic
-from django.forms.models import model_to_dict
+from django.core import serializers
+from django.urls import reverse
 import json
-
-
-
-# Create your views here.
-
-# getAllUsers, getAllAdministrators. getAllAppointments, getAllClients
-# getUser(id), getAdministrator(id), getAppointment(id), getClient(id)
-# setUser(id, user), setAdministrator(id, admin), setAppointment(id, appointment), setClient(id, client)
 
 
 def createEmployee(request):
@@ -35,6 +24,7 @@ def createEmployee(request):
             newEmployee = form.save(commit=False)
             newEmployee.admin = request.user
             newEmployee.save()
+            return redirect('/employees')
     else:
         form = CreateEmployeeForm()
     return render(request, 'register.html', {'form': form})
@@ -47,16 +37,15 @@ def createClient(request):
             newClient = form.save(commit=False)
             newClient.admin = request.user
             newClient.save()
+            return redirect('/clients')
     else:
         form = CreateClientForm()
     return render(request, 'register.html', {'form': form})
 
 
-
-
 def createAdmin(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = (request.POST)
         if form.is_valid():
             # newAdmin = Administrator(name=form.Meta.fields[0], surname=form.Meta.fields[1], email=form.Meta.fields[2], password=form.Meta.fields[3])
             # print(newAdmin)
@@ -64,9 +53,23 @@ def createAdmin(request):
             newAdmin = form.save(commit=False)
             newAdmin.admin = request.user
             newAdmin.save()
+            return redirect('/administrators')
     else:
         form = RegisterForm()
     return render(request, 'register.html', {'form': form})
+
+
+# def CreateAppointment(request):
+#     if request.method == 'POST':
+#         form = CreateAppointmentForm(request.POST)
+#         if form.is_valid():
+#             newApp = form.save(commit=False)
+#             newApp.save()
+#             messages.success(request, f'Your account has been created. You can log in now!')
+#             return redirect('/administrators')
+#     else:
+#         form = CreateAppointmentForm()
+#     return render(request, 'register.html', {'form': form})
 
 
 def Profile(request):
@@ -100,6 +103,82 @@ def register(request):
     return render(request, 'register.html', context)
 
 
+def TableClients(request):
+    # json_records = model_to_dict(Client.objects)
+    serialized_obj = serializers.serialize('json', Client.objects.all())
+    # serialized = json.dumps(json_records)
+    data = json.loads(serialized_obj)
+    context = {'d':data}
+    return render(request, 'tableClients.html', context )
+
+
+def TableEmployees(request):
+    # json_records = model_to_dict(Client.objects)
+    serialized_obj = serializers.serialize('json', Employee.objects.all())
+    # serialized = json.dumps(json_records)
+    data = json.loads(serialized_obj)
+    context = {'d':data}
+    print(data)
+    return render(request, 'tableEmployees.html', context )
+
+
+def TableAdministrators(request):
+    # json_records = model_to_dict(Client.objects)
+    serialized_obj = serializers.serialize('json', Administrator.objects.all())
+    # serialized = json.dumps(json_records)
+    data = json.loads(serialized_obj)
+    context = {'d':data}
+    return render(request, 'tableAdministrators.html', context )
+
+
+def calendar(request):
+    serialized_obj = serializers.serialize('json', Appointment.objects.all())
+    # serialized = json.dumps(json_records)
+    data = json.loads(serialized_obj)
+    context = {'d': data}
+    return render(request, 'calendar.html', context)
+
+
+def deleteClient(request, name):
+    context = {}
+    u = Client.objects.filter(name=name).delete()
+    return redirect('/clients')
+
+
+def deleteAdmin(request, name):
+    context = {}
+    u = Administrator.objects.filter(name=name).delete()
+    return redirect('/administrators')
+
+
+def deleteEmployee(request, name):
+    context = {}
+    u = Employee.objects.filter(name=name).delete()
+    return redirect('/employees')
+
+
+def deleteAppointment(request, pk):
+    context = {}
+    u = Appointment.objects.filter(pk=pk).delete()
+    return redirect('/calendar')
+
+
+def createAppointment(request):
+    if request.method == 'POST':
+        form = CreateAppointmentForm(request.POST)
+        if form.is_valid():
+            newApp = form.save(commit=False)
+            print(newApp)
+            newApp.save()
+            messages.success(request, f'Your account has been created. You can log in now!')
+            return redirect('/calendar')
+    else:
+        form = CreateAppointmentForm()
+    return render(request, 'register.html', {'form': form})
+
+
+
+
 def password_reset_request(request):
     if request.method == "POST":
         password_reset_form = PasswordResetForm(request.POST)
@@ -129,25 +208,3 @@ def password_reset_request(request):
         return render(request=request, template_name="password/password_reset.html",
                       context={"password_reset_form": password_reset_form})
 
-
-class AdministratorsListView(ListView):
-    model = Administrator
-    template_name = 'list.html'
-
-
-class ClientsListView(ListView):
-    model = Client
-    template_name = 'list.html'
-
-
-class EmployeesListView(ListView):
-    model = Employee
-    template_name = 'list.html'
-
-
-def Table(request):
-    json_records = model_to_dict(Client.objects)
-    serialized = json.dumps(json_records)
-    data = json.loads(serialized)
-    context = {'d':data}
-    return render(request, 'table.html', context )

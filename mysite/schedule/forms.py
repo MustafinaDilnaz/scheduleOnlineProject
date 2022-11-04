@@ -1,8 +1,7 @@
 from django import forms
 
 from django.forms import ModelForm
-from .models import Administrator
-from .models import Employee, Client
+from .models import Administrator, Employee, Client, AddInfo1, Appointment
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import Group, User
 
@@ -19,6 +18,18 @@ class CreateEmployeeForm(ModelForm):
     class Meta:
         model = Employee
         fields = ["name", "surname", "password", "email", "jobDescription", "phoneNumber", "group_id", "administrator"]
+
+
+class CreateAppointmentForm(ModelForm):
+    user = forms.ModelChoiceField(queryset=Employee.objects, label='', empty_label="Choose Employee")
+    client = forms.ModelChoiceField(queryset=Client.objects, label='', empty_label="Choose..")
+    appointmentStartTime = forms.DateTimeField(label="StartTime")
+    appointmentEndTime = forms.DateTimeField(label="EndTime")
+    price = forms.IntegerField(label="price")
+
+    class Meta:
+        model = Appointment
+        fields = ["user", "client", "appointmentStartTime", "appointmentEndTime", "price"]
 
 
 class CreateClientForm(ModelForm):
@@ -43,10 +54,10 @@ class RegisterForm(ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
     email = forms.CharField(widget=forms.EmailInput())
     group_id = forms.ModelChoiceField(queryset=Group.objects, label='', empty_label="Choose..")
-
+    information = AddInfo1;
     class Meta:
         model = Administrator
-        fields = ["name", "surname", "password", "email", "group_id"]
+        fields = ["name", "surname", "password", "email", "group_id", "information"]
 
 
 class UserRegistrationForm(UserCreationForm):

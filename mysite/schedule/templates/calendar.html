@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+  #divTable{
+    margin-top: 20px;
+  }
+</style>
+<body>
+
+<div id = 'divTable' class="container">
+  <h2 class="text-center"><u>Appointments</u></h2><br>
+  <table class="table table-dark table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Employee</th>
+        <th>Client</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Price</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    <!-- jinja2 Technique -->
+    {% for i in d %}
+      <tr>
+        <td>{{i.pk}}</td>
+        <td>{{i.fields.user}}</td>
+        <td>{{i.fields.client}}</td>
+        <td>{{i.fields.appointmentStartTime}}</td>
+        <td>{{i.fields.appointmentEndTime}}</td>
+        <td>{{i.fields.price}}</td>
+        <td>
+          <button class="btn btn-secondary">
+          <a class="nav-link" href="delete/{{i.pk}}">delete</a>
+        </button>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+    <button class="btn btn-secondary">
+    <a class="nav-link" href="/createAppointment">Add new</a>
+  </button>
+</div>
+
+</body>
+{% endblock %}
