@@ -46,7 +46,6 @@ class CreateClientForm(ModelForm):
         fields = ["name", "surname", "password", "email",  "phoneNumber", "group_id"]
 
 
-
 class RegisterForm(ModelForm):
     # user = forms.CharField(max_length=100)
     name = forms.CharField(max_length=30)
@@ -55,6 +54,7 @@ class RegisterForm(ModelForm):
     email = forms.CharField(widget=forms.EmailInput())
     group_id = forms.ModelChoiceField(queryset=Group.objects, label='', empty_label="Choose..")
     information = AddInfo1;
+
     class Meta:
         model = Administrator
         fields = ["name", "surname", "password", "email", "group_id", "information"]

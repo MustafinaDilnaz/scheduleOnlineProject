@@ -4,7 +4,7 @@
 # admin.site.register(Post)
 
 from django.contrib import admin
-from schedule.models import Administrator, Client, Employee, Appointment, Group
+from schedule.models import Administrator, Client, Employee, Appointment,  SuperUser
 
 class AdministratorsAdmin(admin.ModelAdmin):
     pass
@@ -23,7 +23,9 @@ class AppointmentsAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Appointment, AppointmentsAdmin)
 
-# class GroupAdmin(admin.ModelAdmin):
-#     pass
-# admin.site.register(Group, AppointmentsAdmin)
+
+@admin.register(SuperUser)
+class SuperUserAdmin(admin.ModelAdmin):
+    pass
+
 

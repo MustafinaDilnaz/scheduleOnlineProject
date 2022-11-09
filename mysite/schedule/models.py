@@ -1,19 +1,20 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import Group
 from strategy_field.fields import StrategyField
 from strategy_field.registry import Registry
 
 
-# Create your models here.
-# create superuser
-# from django.contrib.auth.models import Group
-# Group.add_to_class('description', models.CharField(max_length=180,null=True, blank=True))
+class SingletonModel(models.Model):
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
 
-# class Group(models.Model):
-#     name = models.CharField(max_length=20)
-#
-#     def __str__(self):
-#         return self.name
+
+class SuperUser(SingletonModel):
+    superUserName = models.CharField(max_length=15)
+    password = models.CharField(max_length=15)
 
 
 class AbstractAddInfo(object):
@@ -90,3 +91,9 @@ class Appointment(models.Model):
     appointmentEndTime = models.DateTimeField()
     price = models.FloatField()
     isDoneStatus = models.BooleanField(default=False)
+
+    def get_remaining_time(self):
+        today = datetime.date.today()
+        return (today.year - self.appointmentStartTime.year) - int(
+            (today.month, today.day) <
+            (self.appointmentStartTime.month, self.appointmentStartTime.day))

@@ -4,7 +4,7 @@ from django.contrib import messages
 from .forms import UserRegistrationForm
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.template.loader import render_to_string
@@ -13,7 +13,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.core import serializers
-from django.urls import reverse
 import json
 
 
@@ -45,9 +44,11 @@ def createClient(request):
 
 def createAdmin(request):
     if request.method == 'POST':
-        form = (request.POST)
+        form = RegisterForm(request.POST)
+        print(form)
         if form.is_valid():
-            # newAdmin = Administrator(name=form.Meta.fields[0], surname=form.Meta.fields[1], email=form.Meta.fields[2], password=form.Meta.fields[3])
+            # newAdmin = Administrator(name=form.Meta.fields[0], surname=form.Meta.fields[1],
+            # email=form.Meta.fields[2], password=form.Meta.fields[3])
             # print(newAdmin)
             # newAdmin.save()
             newAdmin = form.save(commit=False)
@@ -110,8 +111,6 @@ def TableClients(request):
     data = json.loads(serialized_obj)
     context = {'d':data}
     return render(request, 'tableClients.html', context )
-
-
 def TableEmployees(request):
     # json_records = model_to_dict(Client.objects)
     serialized_obj = serializers.serialize('json', Employee.objects.all())
@@ -120,8 +119,6 @@ def TableEmployees(request):
     context = {'d':data}
     print(data)
     return render(request, 'tableEmployees.html', context )
-
-
 def TableAdministrators(request):
     # json_records = model_to_dict(Client.objects)
     serialized_obj = serializers.serialize('json', Administrator.objects.all())
@@ -175,8 +172,6 @@ def createAppointment(request):
     else:
         form = CreateAppointmentForm()
     return render(request, 'register.html', {'form': form})
-
-
 
 
 def password_reset_request(request):
